@@ -7,7 +7,7 @@ import React, {
   ReactNode,
   RefObject,
   useContext,
-  useState
+  useState,
 } from 'react';
 
 import {
@@ -16,7 +16,7 @@ import {
   IForm,
   IFormSchema,
   ILayoutProps,
-  ILayoutSchema
+  ILayoutSchema,
 } from './interfaces';
 
 import { validators as defaultValidators } from './validators';
@@ -33,7 +33,7 @@ interface FormContext {
 const formContext = createContext<FormContext>({
   elements: {},
   layoutElements: {},
-  validators: {}
+  validators: {},
 });
 
 interface IFormProvider extends FormContext {
@@ -44,14 +44,14 @@ export function FormProvider({
   elements = {},
   layoutElements = {},
   validators = {},
-  children
+  children,
 }: IFormProvider) {
   return (
     <formContext.Provider
       value={{
         elements,
         layoutElements,
-        validators: { ...defaultValidators, ...validators }
+        validators: { ...defaultValidators, ...validators },
       }}
     >
       {children}
@@ -76,7 +76,7 @@ export const Templator = memo(
     onSubmit,
     defaultValues = {},
     dynamicProps = {},
-    formElement
+    formElement,
   }: ITemplator) => {
     const [values, setValues] = useState<Record<string, any>>(defaultValues);
     const [errors, setErrors] = useState<Record<string, string | undefined>>(
@@ -86,7 +86,7 @@ export const Templator = memo(
     const {
       layoutElements = {},
       elements = {},
-      validators = { defaultValidators }
+      validators = { defaultValidators },
     } = useContext(formContext);
 
     const context: IFormContext = {
@@ -95,13 +95,14 @@ export const Templator = memo(
       inputs: getInputs(schema).reduce(
         (obj, item) => ({
           ...obj,
-          [item.name]: createRef()
+          [item.name]: createRef(),
         }),
         {}
       ),
       setValue: (name: string, value: any) => {
+        console.log({ name, value });
         setValues({ ...values, [name]: value });
-      }
+      },
     };
 
     function validateInput(
@@ -147,7 +148,7 @@ export const Templator = memo(
 
         setErrors({
           ...errors,
-          [element.name]: error ? `${error}` : undefined
+          [element.name]: error ? `${error}` : undefined,
         });
       }
 
@@ -156,7 +157,7 @@ export const Templator = memo(
         error:
           elementErrors && elementErrors.length > 0
             ? elementErrors[0]
-            : undefined
+            : undefined,
       };
     }
 
@@ -179,7 +180,7 @@ export const Templator = memo(
         .reduce(
           (obj, item) => ({
             ...obj,
-            [item.name]: item.error
+            [item.name]: item.error,
           }),
           {}
         );
@@ -199,7 +200,7 @@ export const Templator = memo(
     let indexCounter = 1;
     function renderLayout(schema: IFormSchema) {
       return (
-        <Fragment>
+        <>
           {schema &&
             schema.map((element: ILayoutSchema | IElementSchema) => {
               indexCounter++;
@@ -214,13 +215,16 @@ export const Templator = memo(
                   layoutElements[element.type]({
                     ...element.children,
                     ...element,
-                    children: renderLayout(element.children)
+                    values,
+                    setValues,
+                    children: renderLayout(element.children),
                   })
                 );
               }
 
               const formElement = element as IElementSchema;
               const props = {
+                ...element,
                 tabIndex: indexCounter,
                 submit: onFormSubmit,
                 value: values[formElement.name],
@@ -234,7 +238,7 @@ export const Templator = memo(
                 },
                 ...(dynamicProps[formElement.name]
                   ? dynamicProps[formElement.name]
-                  : {})
+                  : {}),
               };
 
               if (!elements[formElement.type])
@@ -246,12 +250,12 @@ export const Templator = memo(
                 elements[formElement.type]({ ...formElement, ...props })
               );
             })}
-        </Fragment>
+        </>
       );
     }
 
     return React.cloneElement(formElement(onFormSubmit), {
-      children: renderLayout(schema)
+      children: renderLayout(schema),
     });
   }
 );

@@ -69,6 +69,14 @@ const Hello = () => {
                     backgroundColor="rgba(5,5,5,0.1)"
                     backdropFilter="blur(8px)"
                   >
+                    <Form
+                      schema={TEST_FORM}
+                      onSubmit={(data) => {
+                        console.log('FORM DATA IS', data);
+                        // Called when the form has submitted and all the local validation has passed
+                        alert('Form submitted! Data:', JSON.stringify(data));
+                      }}
+                    />
                     <VStack w="100%">
                       <CheckboxCard
                         label="Enter URLs below"
@@ -125,7 +133,7 @@ const Hello = () => {
                                 gap={2}
                                 w="100%"
                               >
-                                <GridItem colSpan={2}></GridItem>
+                                <GridItem colSpan={2} />
                               </Grid>
                             </VStack>
                           ),
@@ -183,13 +191,14 @@ const Hello = () => {
                     />
 
                     <Box px={4}>
+                      shit layout to be converted to templator
                       <SectionLayout label="Network">
                         <Grid templateColumns="repeat(4, 1fr)" gap={2}>
                           <GridItem colSpan={2}>
                             <CheckboxCard
                               label="Extractor descriptions"
                               param="--geo-verification"
-                              hasInput={true}
+                              hasInput
                               description="Use the specified HTTP/HTTPS/SOCKS
                               proxy. To enable SOCKS proxy, specify a
                               proper scheme. For example
@@ -213,7 +222,6 @@ const Hello = () => {
                           />
                         </Grid>
                       </SectionLayout>
-
                       <SectionLayout label="Flags">
                         <Grid templateColumns="repeat(4, 1fr)" gap={2}>
                           <CheckboxCard
@@ -262,14 +270,6 @@ const Hello = () => {
                           />
                         </Grid>
                       </SectionLayout>
-
-                      <Form
-                        schema={TEST_FORM}
-                        onSubmit={(data) => {
-                          // Called when the form has submitted and all the local validation has passed
-                          alert('Form submitted! Data:', JSON.stringify(data));
-                        }}
-                      />
                     </Box>
                   </Box>
                 </Box>

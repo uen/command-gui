@@ -16,8 +16,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { Icon } from './Icon';
 
 interface IInput {
-  name: string;
-  label: string;
+  name?: string;
   type?:
     | 'button'
     | 'checkbox'
@@ -49,7 +48,7 @@ interface IInput {
   inputRightElement?: ReactNode;
   required?: boolean;
   readOnly?: boolean;
-  error?: boolean;
+  error?: string;
   onClick?: () => void;
   cursor?: string;
   disabled?: boolean;
@@ -58,15 +57,16 @@ interface IInput {
   helperText?: string;
   min?: number;
   max?: number;
+  placeholder: string;
 }
 export function Input({
-  label,
   name,
   required,
   readOnly,
   error,
   cursor,
   disabled,
+  placeholder,
   onChange,
   min,
   max,
@@ -82,22 +82,8 @@ export function Input({
   value,
 }: IInput) {
   return (
-    <FormControl mb={error || helperText ? 1 : 3} onClick={onClick}>
-      <VStack alignItems="flex-start" spacing={2}>
-        <VStack
-          w="100%"
-          spacing={1}
-          justifyContent="space-between"
-          alignItems="flex-start"
-        >
-          <Text fontSize={14} color="white" fontWeight="bold" flex={1}>
-            {label}
-          </Text>
-          {/* <Text fontSize={12} color="white" textAlign="left">
-            Use the given as the commit message. If multiple -m options are
-            given, their values are concatenated as separate paragraphs.
-          </Text> */}
-        </VStack>
+    <FormControl onClick={onClick} w="100%">
+      <VStack alignItems="flex-start" spacing={2} w="100%">
         <InputGroup>
           <Center w="100%" justifyContent="center" alignItems="center">
             {icon ? (
@@ -114,15 +100,17 @@ export function Input({
               cursor={cursor}
               min={min}
               max={max}
-              placeholder="Enter your commit messag"
+              placeholder={placeholder}
               bg="rgba(0,0,0,.3)"
               disabled={disabled}
               fontSize={14}
+              size="lg"
               onFocusCapture={onFocus}
               onKeyDown={onKeyDown}
               readOnly={readOnly}
-              colorScheme="brand"
+              color="gray.200"
               border="none"
+              _placeholder={{ color: 'gray.400' }}
               _focus={{
                 borderColor: error ? 'red.500' : 'brand.200',
               }}
@@ -132,20 +120,22 @@ export function Input({
               }}
               onBlur={onBlur}
               value={value}
-              // placeholder={`${label}${required ? ' *' : ''}`}
               isInvalid={error}
               ref={inputRef}
-              p={7}
-              pl={icon ? 12 : 4}
+              // p={7}
+              pl={icon ? 12 : undefined}
+              // pr={inputRightElement ? 4 : undefined}
             />
             {inputRightElement ? (
               <InputRightElement
                 width="auto"
                 alignItems="right"
-                pointerEvents="none"
-                p={4}
-                children={inputRightElement}
-              />
+                h="100%"
+                pr={2}
+                // p={4}
+              >
+                <HStack h="100%">{inputRightElement}</HStack>
+              </InputRightElement>
             ) : null}
           </Center>
         </InputGroup>

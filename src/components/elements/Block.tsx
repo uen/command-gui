@@ -24,7 +24,7 @@ interface CheckboxCardProps {
 export const Block = ({ children }: CheckboxCardProps) => (
   <Box
     p={4}
-    h="100%"
+    // h="100%"
     bg="rgba(0,0,0,.4)"
     borderRadius={4}
     w="100%"

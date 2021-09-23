@@ -27,8 +27,10 @@ export const InputLabel = ({ description, label }: CheckboxCardProps) => (
     <Text fontSize={14} color="white" fontWeight="bold">
       {label}
     </Text>
-    <Text fontSize={12} color="white">
-      {description}
-    </Text>
+    {description && (
+      <Text fontSize={12} color="white">
+        {description}
+      </Text>
+    )}
   </VStack>
 );
